@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <title>Leanmonade – Produtos</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <link href="https://fonts.googleapis.com/css?family=Onest:400,700|Instrument+Sans:400,700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --main-background: #ffffff;
+      --main-foreground: #000000;
+      --accent-color: #6F23C3;
+      --body-font: 'Instrument Sans', sans-serif;
+      --heading-font: 'Onest', sans-serif;
+      --container-width: 1020px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--body-font);
+      background: var(--main-background);
+      color: var(--main-foreground);
+      text-align: center;
+      line-height: 1.5;
+    }
+    header {
+      padding: 20px;
+      border-bottom: 1px solid #eee;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .header-logo img {
+      height: 90px;
+    }
+    .header-icons {
+      display: flex;
+      gap: 20px;
+      font-size: 36px;
+      cursor: pointer;
+    }
+    h1 {
+      display: none;
+    }
+    .produtos {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 30px;
+      max-width: var(--container-width);
+      margin: 30px auto;
+      padding: 0 20px;
+    }
+    .produto {
+      cursor: pointer;
+    }
+    .produto img {
+      width: 100%;
+      border-radius: 4px;
+      transition: transform 0.2s;
+    }
+    .produto img:hover {
+      transform: scale(1.05);
+    }
+    .nome { margin-top: 12px; font-size: 18px; font-weight: 500; }
+    .preco { margin-top: 4px; font-size: 16px; color: #444; }
+
+    .pagina-produto, .pagina-avaliacoes {
+      display: none;
+      padding: 30px 20px;
+      max-width: 800px;
+      margin: auto;
+      text-align: left;
+    }
+    .pagina-produto img {
+      width: 100%;
+      max-width: 500px;
+      object-fit: contain;
+      border-radius: 8px;
+      background: #f5f5f5;
+      display: block;
+      margin: 0 auto 20px;
+    }
+    .btn-comprar {
+      background: var(--accent-color);
+      color: #fff;
+      padding: 15px;
+      font-size: 18px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      width: 100%;
+      margin: 20px 0;
+    }
+    .descricao {
+      font-size: 15px;
+      color: #444;
+      line-height: 1.6;
+      white-space: pre-line;
+    }
+    .avaliacoes, .similares {
+      margin-top: 30px;
+    }
+    .avaliacao {
+      margin-bottom: 18px;
+      font-size: 18px;
+      background: #f2f2f2;
+      padding: 15px;
+      border-radius: 8px;
+    }
+    .avaliacao strong {
+      display: block;
+      font-weight: bold;
+      font-size: 20px;
+      margin-bottom: 5px;
+    }
+    .estrelas {
+      color: gold;
+      font-size: 22px;
+      margin-bottom: 6px;
+    }
+    .comentario {
+      font-style: italic;
+      font-size: 17px;
+      color: #333;
+    }
+    .similares .produto-similar {
+      display: inline-block;
+      width: 180px;
+      margin: 10px;
+      text-align: center;
+      cursor: pointer;
+    }
+    .produto-similar img {
+      width: 100%;
+      border-radius: 4px;
+    }
+    .ver-tudo {
+      margin-top: 10px;
+      background: none;
+      border: none;
+      color: var(--accent-color);
+      text-decoration: underline;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    footer {
+      font-size: 13px;
+      color: #999;
+      text-align: center;
+      margin: 40px 0 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-logo" onclick="voltar()">
+      <img src="https://dcdn-us.mitiendanube.com/stores/006/350/427/themes/common/logo-180345703-1749631156-4570c30947635ca66c21b547c4024a671749631156-640-0.webp" alt="Leanmonade Logo">
+    </div>
+    <div class="header-icons">
+      <span>🛒</span>
+      <span>☰</span>
+    </div>
+  </header>
+
+  <div class="produtos" id="listaProdutos"></div>
+  <div class="pagina-produto" id="paginaProduto"></div>
+  <div class="pagina-avaliacoes" id="paginaAvaliacoes"></div>
+
+  <footer>
+    Copyright © 2025, Leanmonade.
+  </footer>
+
+  <script>
+    const produtos = [
+      {
+        nome: 'Moletom "Leanmonade"',
+        preco: 'R$169,90',
+        precoValor: 169.90,
+        imagem: 'https://dcdn-us.mitiendanube.com/stores/006/350/427/products/1000216444-a52d2e298e81c372db17501303699005-1024-1024.png',
+        descricao: 'Moletom na cor preta, confeccionado em algodão.\nPossui estampa frontal aplicada em silk.\nModelagem tradicional, confortável para o uso diário.',
+        avaliacoes: [
+          { nome: 'Alexander', estrelas: 5, comentario: 'Muito bonito e quente.' },
+          { nome: 'Caio', estrelas: 5, comentario: 'Chegou antes do prazo.' },
+          { nome: 'Arthur', estrelas: 5, comentario: 'É muito confortável!' },
+          { nome: 'Maximilian', estrelas: 5, comentario: 'Qualidade ótima, recomendo.' },
+          { nome: 'João Pedro', estrelas: 5, comentario: 'Muito bonito e chegou rápido.' }
+        ]
+      },
+      {
+        nome: 'Camiseta Oversized "Leanmonade"',
+        preco: 'R$129,90',
+        precoValor: 129.90,
+        imagem: 'https://dcdn-us.mitiendanube.com/stores/006/350/427/products/1000216012-006e554b0e5949580c17496326185155-640-0.webp',
+        descricao: 'Camiseta na cor preta, confeccionada em 100% algodão.\nPossui estampa frontal aplicada em silk.\nModelagem boxy, caimento mais reto e amplo, com gola canelada e acabamento reforçado.',
+        avaliacoes: [
+          { nome: 'Ivo Luiz', estrelas: 5, comentario: 'Camiseta muito boa, qualidade zika, recomendo.' },
+          { nome: 'Vitor André', estrelas: 5, comentario: 'Chegou antes do prazo, veio tudo certinho. Com certeza vou comprar mais.' },
+          { nome: 'Saidy Gabriel', estrelas: 5, comentario: 'Muito bom, pode confiar.' },
+          { nome: 'Mateus Paes', estrelas: 5, comentario: 'Melhor camiseta que comprei.' },
+          { nome: 'Yuri Brida', estrelas: 5, comentario: 'Camiseta goti dms 🤟🏼' }
+        ]
+      },
+      {
+        nome: 'Boné Five Panel "Leanmonade"',
+        preco: 'R$109,90',
+        precoValor: 109.90,
+        imagem: 'https://dcdn-us.mitiendanube.com/stores/006/350/427/products/1000216014-7611d11081258d9a8717496330273036-640-0.webp',
+        descricao: 'Boné five panel com ajuste traseiro e detalhe frontal bordado.\nEstilo urbano com tecido leve e respirável.\nIdeal para compor qualquer look casual.',
+        avaliacoes: [
+          { nome: 'Lucas Dantas', estrelas: 5, comentario: 'Chegou super rápido, bem embalado. Já é meu boné favorito.' },
+          { nome: 'Rian', estrelas: 5, comentario: 'Veio rápido, gostei.' },
+          { nome: 'Murilo Reis', estrelas: 5, comentario: 'Curti demais o boné, qualidade diferente dos que vejo por aí.' },
+          { nome: 'Miguel', estrelas: 5, comentario: 'Melhor do que eu esperava..' },
+          { nome: 'Kauan', estrelas: 5, comentario: 'Qualidade muito boa.' }
+        ]
+      }
+    ];
+
+    const lista = document.getElementById("listaProdutos");
+    const pagina = document.getElementById("paginaProduto");
+    const avaliacoesDiv = document.getElementById("paginaAvaliacoes");
+
+    produtos.sort((a, b) => b.precoValor - a.precoValor);
+
+    function exibirProdutos() {
+      lista.innerHTML = '';
+      produtos.forEach((p, i) => {
+        const div = document.createElement("div");
+        div.className = "produto";
+        div.innerHTML = `
+          <img src="${p.imagem}" alt="${p.nome}">
+          <div class="nome">${p.nome}</div>
+          <div class="preco">${p.preco}</div>
+        `;
+        div.onclick = () => abrirProduto(i);
+        lista.appendChild(div);
+      });
+    }
+
+    function abrirProduto(index) {
+      const p = produtos[index];
+      const similares = produtos.filter((_, i) => i !== index);
+      lista.style.display = "none";
+      pagina.style.display = "block";
+      avaliacoesDiv.style.display = "none";
+
+      pagina.innerHTML = `
+        <img src="${p.imagem}" alt="${p.nome}">
+        <h2>${p.nome}</h2>
+        <p><strong>${p.preco}</strong></p>
+
+        <button class="btn-comprar">Comprar</button>
+        <div class="descricao">${p.descricao}</div>
+
+        <div class="avaliacoes">
+          <h3>Avaliações</h3>
+          ${p.avaliacoes.slice(0, 3).map(a => `
+            <div class="avaliacao">
+              <strong>${a.nome}</strong>
+              <div class="estrelas">${'★'.repeat(a.estrelas)}${'☆'.repeat(5 - a.estrelas)}</div>
+              <div class="comentario">${a.comentario}</div>
+            </div>
+          `).join('')}
+          <button class="ver-tudo" onclick="verTodasAvaliacoes(${index})">Ver todas avaliações</button>
+        </div>
+
+        <div class="similares">
+          <h3>Produtos Similares</h3>
+          ${similares.map((s, i) => `
+            <div class="produto-similar" onclick="abrirProduto(${produtos.indexOf(s)})">
+              <img src="${s.imagem}" alt="${s.nome}">
+              <div>${s.nome}</div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    function verTodasAvaliacoes(index) {
+      const p = produtos[index];
+      lista.style.display = "none";
+      pagina.style.display = "none";
+      avaliacoesDiv.style.display = "block";
+
+      avaliacoesDiv.innerHTML = `
+        <h2>Todas avaliações de ${p.nome}</h2>
+        ${p.avaliacoes.map(a => `
+          <div class="avaliacao">
+            <strong>${a.nome}</strong>
+            <div class="estrelas">${'★'.repeat(a.estrelas)}${'☆'.repeat(5 - a.estrelas)}</div>
+            <div class="comentario">${a.comentario}</div>
+          </div>
+        `).join('')}
+        <button class="ver-tudo" onclick="abrirProduto(${index})">Voltar ao produto</button>
+      `;
+    }
+
+    function voltar() {
+      lista.style.display = "grid";
+      pagina.style.display = "none";
+      avaliacoesDiv.style.display = "none";
+    }
+
+    exibirProdutos();
+  </script>
+
+</body>
+</html>
